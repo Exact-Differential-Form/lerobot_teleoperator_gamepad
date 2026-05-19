@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lerobot_teleoperator_gamepad"
+version = "0.1.0"
+description = "Gamepad Cartesian teleoperation and recording helpers for Trossen LeRobot setups"
+readme = "README.md"
+requires-python = ">=3.10,<3.13"
+dependencies = [
+  "evdev>=1.7.0",
+  "lerobot[intelrealsense]>=0.4.0",
+  "trossen_arm>=1.9.0",
+]
+
+[project.scripts]
+lerobot-record-trossen-gamepad = "lerobot_teleoperator_gamepad.record:main"
+
+[tool.setuptools.packages.find]
+include = ["lerobot_teleoperator_gamepad*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
