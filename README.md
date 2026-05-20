@@ -30,10 +30,17 @@ uv run python -c "import lerobot, trossen_arm, evdev, pyrealsense2, lerobot_tele
 
 ## Record
 
-Dual-camera smoke command, using D405 as wrist camera and D455F as external camera:
+The recorder uses manual episode boundaries. Press gamepad `Start` once to begin
+recording, press `Start` again to stop and save the episode, then press `Start`
+again when you are ready for the next episode. `Ctrl-C` exits the program.
+
+Use `--dataset.episode_time_s=0` to disable the fixed LeRobot episode timer. A
+positive value keeps a safety timeout for each episode.
+
+Dual-camera command, using D405 as wrist camera and D455F as external camera:
 
 ```bash
-uv run lerobot-record-trossen-gamepad \
+lerobot-record-trossen-gamepad \
   --robot.type=trossen_cartesian_follower_robot \
   --robot.ip_address=192.168.1.3 \
   --robot.id=follower \
@@ -46,15 +53,22 @@ uv run lerobot-record-trossen-gamepad \
   --teleop.id=xbox \
   --teleop.config_path=/home/jiahao/code/trossen_ctrl/controller/config.yaml \
   --teleop.deadzone_fraction=0.2 \
-  --dataset.repo_id=jiahao/widowxai-gamepad-dual-smoke \
-  --dataset.root=/tmp/lerobot_trossen_gamepad_dual_smoke \
+  --dataset.repo_id=jiahao/widowxai-gamepad-manual \
+  --dataset.root=/tmp/lerobot_trossen_gamepad_manual \
   --dataset.push_to_hub=false \
-  --dataset.num_episodes=1 \
-  --dataset.episode_time_s=10 \
-  --dataset.reset_time_s=3 \
-  --dataset.single_task="Move the end effector slightly with the gamepad" \
+  --dataset.num_episodes=10 \
+  --dataset.episode_time_s=0 \
+  --dataset.reset_time_s=0 \
+  --dataset.single_task="Collect manual gamepad-controlled Trossen trajectories" \
   --display_data=false
 ```
 
 The recorded image features should appear as `observation.images.cam_wrist` and
 `observation.images.cam_external`.
+
+If the `trossen` conda environment is not activated, call the script by absolute
+path:
+
+```bash
+/home/jiahao/miniconda3/envs/trossen/bin/lerobot-record-trossen-gamepad ...
+```

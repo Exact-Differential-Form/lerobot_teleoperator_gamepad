@@ -4,7 +4,7 @@ import math
 
 from lerobot_teleoperator_gamepad.constants import ACTION_TARGET_KEYS, OBS_CARTESIAN_KEYS
 from lerobot_teleoperator_gamepad.processors import TrossenGamepadActionProcessorStep
-from lerobot_teleoperator_gamepad.record import make_trossen_gamepad_teleop_action_processor
+from lerobot_teleoperator_gamepad.record_processors import make_trossen_gamepad_teleop_action_processor
 
 
 def observation(values):

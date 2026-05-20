@@ -7,12 +7,18 @@ def load_keybind_config(path: str | Path) -> dict[str, dict[str, str]]:
     config_path = Path(path)
     config: dict[str, dict[str, str]] = {}
     current_section: str | None = None
+    lines: list[tuple[int, str]] = []
 
     for line_number, raw_line in enumerate(config_path.read_text().splitlines(), 1):
         line = _strip_comment(raw_line).rstrip()
         if not line.strip():
             continue
+        lines.append((line_number, line))
 
+    common_indent = min((_indent_width(line) for _, line in lines), default=0)
+
+    for line_number, raw_line in lines:
+        line = raw_line[common_indent:]
         if not line.startswith((" ", "\t")):
             if not line.endswith(":"):
                 raise ValueError(f"{config_path}:{line_number}: expected a section ending with ':'")
@@ -70,6 +76,10 @@ def _strip_comment(line: str) -> str:
         elif char == "#" and not in_single and not in_double:
             return line[:index]
     return line
+
+
+def _indent_width(line: str) -> int:
+    return len(line) - len(line.lstrip(" \t"))
 
 
 def _unquote(value: str) -> str:
